@@ -1,19 +1,104 @@
 version: '2'
 services:
+  grafana:
+    image: "grafana/grafana:latest"
+    ports:
+     - "3000:3000"
+    environment:
+      GF_PATHS_DATA : /var/lib/grafana
+      GF_SECURITY_ADMIN_PASSWORD : kafka
+    volumes:
+     - grafana-storage:/var/lib/grafana
+    container_name: grafana
+    depends_on:
+     - prometheus
+
+  prometheus:
+    image: "prom/prometheus:latest"
+    ports:
+     - "9090:9090"
+    volumes:
+     - my_extensions/prometheus.yml:/etc/prometheus/prometheus.yml
+    container_name: prometheus
+
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
     restart: unless-stopped
 
-  kafka:
+  kafka0:
     build: .
     ports:
-      - "9092"
+      - "9092:9092"
+      - "12345"
     environment:
-      DOCKER_API_VERSION: 1.22
-      KAFKA_ADVERTISED_HOST_NAME: 192.168.99.100
+      #DOCKER_API_VERSION: 1.22
+      #KAFKA_ADVERTISED_HOST_NAME: kafka0
+      #KAFKA_ADVERTISED_PORT: 9092
+      KAFKA_LISTENERS: LISTENER_PUBLIC://kafka0:9092,LISTENER_INTERNAL_DOCKER://kafka0:29092
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_PUBLIC://j.shaojun.xyz:9092,LISTENER_INTERNAL_DOCKER://kafka0:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_PUBLIC:PLAINTEXT,LISTENER_INTERNAL_DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL_DOCKER
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OPTS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-0.19.0.jar=12345:/usr/share/jmx_exporter/kafka-broker.yml
+      #KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=124.222.206.102 -Dcom.sun.management.jmxremote.rmi.port=12345"
+      #JMX_PORT: 12345
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
+      #KAFKA_CREATE_TOPICS: "broker_start_test:1:1"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - my_extensions:/usr/share/jmx_exporter/
     restart: unless-stopped
+    
+    
+  kafka1:
+    build: .
+    ports:
+      - "9093:9093"
+      - "12345"
+    environment:
+      DOCKER_API_VERSION: 1.22
+      #KAFKA_ADVERTISED_HOST_NAME: kafka1
+      #KAFKA_ADVERTISED_PORT: 9093
+      KAFKA_LISTENERS: LISTENER_PUBLIC://kafka1:9093,LISTENER_INTERNAL_DOCKER://kafka1:29093
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_PUBLIC://j.shaojun.xyz:9093,LISTENER_INTERNAL_DOCKER://kafka1:29093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_PUBLIC:PLAINTEXT,LISTENER_INTERNAL_DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL_DOCKER
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OPTS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-0.19.0.jar=12345:/usr/share/jmx_exporter/kafka-broker.yml
+      #KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ss>
+      #JMX_PORT: 12345
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
+      #KAFKA_CREATE_TOPICS: "broker_start_test:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - my_extensions:/usr/share/jmx_exporter/
+    restart: unless-stopped
+
+    
+  kafka2:
+    build: .
+    ports:
+      - "9094:9094"
+      - "12345"
+    environment:
+      DOCKER_API_VERSION: 1.22
+      #KAFKA_ADVERTISED_HOST_NAME: kafka2
+      #KAFKA_ADVERTISED_PORT: 9094
+      KAFKA_LISTENERS: LISTENER_PUBLIC://kafka2:9094,LISTENER_INTERNAL_DOCKER://kafka2:29094
+      KAFKA_ADVERTISED_LISTENERS: LISTENER_PUBLIC://j.shaojun.xyz:9094,LISTENER_INTERNAL_DOCKER://kafka2:29094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: LISTENER_PUBLIC:PLAINTEXT,LISTENER_INTERNAL_DOCKER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: LISTENER_INTERNAL_DOCKER
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_OPTS: -javaagent:/usr/share/jmx_exporter/jmx_prometheus_javaagent-0.19.0.jar=12345:/usr/share/jmx_exporter/kafka-broker.yml
+      #KAFKA_JMX_OPTS: "-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ss>
+      #JMX_PORT: 12345
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms512M"
+      #KAFKA_CREATE_TOPICS: "broker_start_test:1:1"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - my_extensions:/usr/share/jmx_exporter/
+    restart: unless-stopped
+volumes:
+  grafana-storage:
