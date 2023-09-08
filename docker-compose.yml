@@ -31,7 +31,6 @@ services:
     build: .
     ports:
       - "9092:9092"
-      - "12345"
     environment:
       #DOCKER_API_VERSION: 1.22
       #KAFKA_ADVERTISED_HOST_NAME: kafka0
@@ -57,7 +56,6 @@ services:
     build: .
     ports:
       - "9093:9093"
-      - "12345"
     environment:
       DOCKER_API_VERSION: 1.22
       #KAFKA_ADVERTISED_HOST_NAME: kafka1
@@ -83,7 +81,6 @@ services:
     build: .
     ports:
       - "9094:9094"
-      - "12345"
     environment:
       DOCKER_API_VERSION: 1.22
       #KAFKA_ADVERTISED_HOST_NAME: kafka2
