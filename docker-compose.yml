@@ -12,6 +12,7 @@ services:
     container_name: grafana
     depends_on:
      - prometheus
+    restart: unless-stopped
 
   prometheus:
     image: "prom/prometheus:latest"
@@ -20,6 +21,7 @@ services:
     volumes:
      - my_extensions/prometheus.yml:/etc/prometheus/prometheus.yml
     container_name: prometheus
+    restart: unless-stopped
 
   zookeeper:
     image: wurstmeister/zookeeper
