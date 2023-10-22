@@ -19,7 +19,7 @@ services:
     ports:
      - "9090:9090"
     volumes:
-     - my_extensions/prometheus.yml:/etc/prometheus/prometheus.yml
+     - ./my_extensions/prometheus.yml:/etc/prometheus/prometheus.yml
     container_name: prometheus
     restart: unless-stopped
 
@@ -51,7 +51,7 @@ services:
       KAFKA_LOG_RETENTION_HOURS: 6
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - my_extensions:/usr/share/jmx_exporter/
+      - ./my_extensions:/usr/share/jmx_exporter/
     restart: unless-stopped
     
     
@@ -77,7 +77,7 @@ services:
       KAFKA_LOG_RETENTION_HOURS: 6
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - my_extensions:/usr/share/jmx_exporter/
+      - ./my_extensions:/usr/share/jmx_exporter/
     restart: unless-stopped
 
     
@@ -103,7 +103,7 @@ services:
       KAFKA_LOG_RETENTION_HOURS: 6
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - my_extensions:/usr/share/jmx_exporter/
+      - ./my_extensions:/usr/share/jmx_exporter/
     restart: unless-stopped
 volumes:
   grafana-storage:
