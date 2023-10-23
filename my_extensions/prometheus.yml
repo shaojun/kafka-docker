@@ -45,7 +45,10 @@ scrape_configs:
         target_label: hostname
         regex: '([^:]+)(:[0-9]+)?'
         replacement: '${1}'
-
+  - job_name: "node_exporter"
+    static_configs:
+      - targets:
+          - "localhost:9100"
 
 
   # No producer for the moment in cp-demo
