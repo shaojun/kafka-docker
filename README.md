@@ -210,3 +210,23 @@ See the [wiki](https://github.com/wurstmeister/kafka-docker/wiki/ReleaseProcess)
 ## Tutorial
 
 [http://wurstmeister.github.io/kafka-docker/](http://wurstmeister.github.io/kafka-docker/)
+
+
+## node exporter
+`wget` the node exporter from web, unzip it to `/data1/node_exporter-1.6.1.linux-amd64`.
+create a service for it.
+```
+[Unit]
+Description=Node Exporter
+After=network.target
+
+[Service]
+#User=node_exporter
+#Group=node_exporter
+Type=simple
+ExecStart=/data1/node_exporter-1.6.1.linux-amd64/node_exporter
+
+[Install]
+WantedBy=multi-user.target
+```
+
